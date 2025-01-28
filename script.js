@@ -50,13 +50,19 @@ async function fetchArt(query) {
         //get IDs from API
         const resultArray = data.objectIDs;
         //console.log(resultArray);
+        // fetch only the 10 first ID:s
 
-        //sending result = ID:s to another function
-        resultArray.forEach(ID => {
-
+        for (let i = 0; i < 10; i++) {
+            const ID = resultArray[i];
             fetchArtObjects(ID);
+        }
+
+        // //sending result = ID:s to another function
+        // resultArray.forEach(ID => {
+
+        //     fetchArtObjects(ID);
         
-        });
+        // });
 
 
     }   catch (error) {
@@ -71,7 +77,7 @@ async function fetchArt(query) {
         const objectSearchResult = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${ID}`;
 
 
-        //artContainerEl.innerHTML = ""; // empty from before
+        artContainerEl.innerHTML = ""; // empty from before
 
         try {
             const objResponse = await fetch(objectSearchResult);
