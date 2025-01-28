@@ -52,9 +52,12 @@ async function fetchArt(query) {
         //console.log(resultArray);
         // fetch only the 10 first ID:s
 
+
+        //sending result = ID:s to another function
         for (let i = 0; i < 10; i++) {
             const ID = resultArray[i];
             fetchArtObjects(ID);
+
         }
 
         // //sending result = ID:s to another function
@@ -89,7 +92,7 @@ async function fetchArt(query) {
 
 
             //filter out non-public domain objects 
-            if(objData.isPublicDomain === true) {
+           if(objData.isPublicDomain === true) {
         
     
                 console.log(objData);
@@ -99,8 +102,13 @@ async function fetchArt(query) {
                 artArticle.classList.add('art-piece');
 
                 artArticle.innerHTML = `
-                <img src="${objData.primaryImageSmall}" alt="${objData.title}"/>
-                <a href="${objData.objectURL}" target="_blank"><h2>${objData.title}</h2></a>`;
+                <img src="${objData.primaryImageSmall}" alt="Photo of ${objData.title}"/>
+                <a href="${objData.objectURL}" target="_blank"><h3>${objData.title}</h3></a>
+                
+                <button type="submit" id="addToFavs">Lägg till i favoriter</button>
+                `;
+
+                
 
                 artContainerEl.appendChild(artArticle); 
 
