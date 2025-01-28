@@ -15,8 +15,7 @@ const inputEl = document.getElementById("search-input");
 
 
 
-
-//submit serach-form
+//submit search-form
 formEl.addEventListener("submit", (event) => {
     event.preventDefault();
     console.log("inputten: " + inputEl.value);
@@ -29,11 +28,6 @@ formEl.addEventListener("submit", (event) => {
 
 
 
-
-
-
- 
-
  //function for fetching search-results from API
 async function fetchArt(query) {
     const searchResult = `https://collectionapi.metmuseum.org/public/collection/v1/search?q=${query}`;
@@ -43,7 +37,6 @@ async function fetchArt(query) {
     //console.log(searchResultTest);
 
 
-    
 
     try {
         const response = await fetch(searchResult);
@@ -51,22 +44,19 @@ async function fetchArt(query) {
             throw new Error(`Error: ${response.status}`);
         }
         const data = await response.json();
-        //call function that shows result in dom, for now only console.log
+        //call function that shows result in dom
         console.log(data);
 
-        //get IDs
+        //get IDs from API
         const resultArray = data.objectIDs;
         //console.log(resultArray);
-
 
         //sending result = ID:s to another function
         resultArray.forEach(ID => {
 
             fetchArtObjects(ID);
-     
+        
         });
-
-
 
 
     }   catch (error) {
@@ -81,7 +71,7 @@ async function fetchArt(query) {
         const objectSearchResult = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${ID}`;
 
 
-        artContainerEl.innerHTML = ""; // empty from before
+        //artContainerEl.innerHTML = ""; // empty from before
 
         try {
             const objResponse = await fetch(objectSearchResult);
@@ -94,38 +84,27 @@ async function fetchArt(query) {
 
             //filter out non-public domain objects 
             if(objData.isPublicDomain === true) {
+        
+    
                 console.log(objData);
-
-                //only display 10
-                
-
+             
 
                 const artArticle = document.createElement('article');
                 artArticle.classList.add('art-piece');
 
                 artArticle.innerHTML = `
+                <img src="${objData.primaryImageSmall}" alt="${objData.title}"/>
                 <a href="${objData.objectURL}" target="_blank"><h2>${objData.title}</h2></a>`;
 
-                artContainerEl.appendChild(artArticle);
-    
-    
-    
+                artContainerEl.appendChild(artArticle); 
 
             }
             
-            
-
-
-
-
         }   catch (error) {
             console.error(error);
         }
 
     };
-    
-
-    
 
 
 }
