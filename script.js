@@ -5,6 +5,7 @@
  // eller https://metmuseum.org/api/collection/collectionlisting?q=test ????
 
 const artContainerEl = document.getElementById("art-container");
+const favourites = [];
 
  
 console.log("Vad händer???");
@@ -25,6 +26,21 @@ formEl.addEventListener("submit", (event) => {
     fetchArt(query); //call function to get searchResult
 });
  
+
+
+function addToFavouriteList (objData) {
+    console.log("knappen klickades");
+
+
+    favourites.push(objData);
+    console.log(favourites);
+}
+
+
+    
+
+   
+
 
 
 
@@ -50,9 +66,9 @@ async function fetchArt(query) {
         //get IDs from API
         const resultArray = data.objectIDs;
         //console.log(resultArray);
+        
+
         // fetch only the 10 first ID:s
-
-
         //sending result = ID:s to another function
         for (let i = 0; i < 10; i++) {
             const ID = resultArray[i];
@@ -94,8 +110,8 @@ async function fetchArt(query) {
             //filter out non-public domain objects 
            if(objData.isPublicDomain === true) {
         
-    
                 console.log(objData);
+                let buttonID = "addToFavs" + objData.objectID; //Use ID in object to create unique id:s for the button
              
 
                 const artArticle = document.createElement('article');
@@ -105,14 +121,27 @@ async function fetchArt(query) {
                 <img src="${objData.primaryImageSmall}" alt="Photo of ${objData.title}"/>
                 <a href="${objData.objectURL}" target="_blank"><h3>${objData.title}</h3></a>
                 
-                <button type="submit" id="addToFavs">Lägg till i favoriter</button>
+                <button type="submit" id="${buttonID}">Lägg till i favoriter</button>
                 `;
-
-                
 
                 artContainerEl.appendChild(artArticle); 
 
+
+
+                //Add to favourites-button
+                const addFavButton = document.getElementById(buttonID);
+                addFavButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+                    addToFavouriteList(objData);
+               
+                });
             }
+
+            
+
+
+
             
         }   catch (error) {
             console.error(error);
