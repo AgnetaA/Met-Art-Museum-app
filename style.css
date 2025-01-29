@@ -3,7 +3,7 @@
 
 
 
-#art-container  {
+#art-container, #favourite-container  {
     display: flex;
     flex-wrap: wrap;
 }
