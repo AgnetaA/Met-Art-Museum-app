@@ -43,7 +43,7 @@ function renderObjectToDom(favObject){
 
 //get saved favourites
 function getFavouriteObjects () {
-    favouriteObjects= JSON.parse(localStorage.getItem('favourite_art') || "[]");
+    favouriteObjects = JSON.parse(localStorage.getItem('favourite_art') || "[]");
     
     console.log("favouriteObjects:", favouriteObjects)
 }
