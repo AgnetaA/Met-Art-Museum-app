@@ -1,14 +1,22 @@
 //some variables
+let favouriteObjects = []; //here we store all our favourite objects from localstorage
+
 const artContainerEl = document.getElementById("art-container");
-const favourites = [];
-const favouriteItems = document.getElementById("favourite-container");
-
-
+const favouriteItemsEl = document.getElementById("favourite-container");
 const formEl = document.getElementById("search-form");  //the whole form
 const inputEl = document.getElementById("search-input");
 
-renderFavouritesList();
 
+getFavouriteObjects();
+
+//Send all objects in favourite-array (localstorage) to be rendered as the page loads
+for (let i = 0; i < favouriteObjects.length; i++) {
+    const favObject = favouriteObjects[i];
+    
+    console.log(favObject.title);       
+    
+    renderObjectToDom(favouriteObjects[i]);
+}
 
 //submit search-form
 formEl.addEventListener("submit", (event) => {
@@ -18,10 +26,8 @@ formEl.addEventListener("submit", (event) => {
     fetchArt(query); //call function to get searchResult
 });
 
-
-function seeTheList(favObject){
-
-    console.log(favObject.title);
+//Write the HTML for a favourite object
+function renderObjectToDom(favObject){
 
     const favouriteArticle = document.createElement('article');
     favouriteArticle.classList.add('art-piece');
@@ -31,55 +37,42 @@ function seeTheList(favObject){
         <a href="${favObject.objectURL}" target="_blank"><h3>${favObject.title}</h3></a>
     `;
 
-    favouriteItems.appendChild(favouriteArticle);
+    favouriteItemsEl.appendChild(favouriteArticle);
 }
 
 
-//print saved favourites
-function renderFavouritesList () {
-    const favouritesList = JSON.parse(localStorage.getItem('favourite_art'));
-    console.log(favouritesList);
-       
-
-    for (let i = 0; i < favouritesList.length; i++) {
-        const favObject = favouritesList[i];
-        
-        seeTheList(favObject);
-       
-    }
-
- 
+//get saved favourites
+function getFavouriteObjects () {
+    favouriteObjects= JSON.parse(localStorage.getItem('favourite_art') || "[]");
+    
+    console.log("favouriteObjects:", favouriteObjects)
 }
 
 
 //Add to favourites and localstorage
 function addToFavouriteList (objData) {
-    console.log("knappen klickades");
 
-    favourites.push(objData);
-    console.log(favourites);
+    console.log("objData",objData);
 
-    localStorage.setItem("favourite_art", JSON.stringify(favourites));
+    favouriteObjects.push(objData);
 
-    renderFavouritesList();
-   
+    localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
+    console.log("favouriteObjects",favouriteObjects);
+
+    renderObjectToDom(objData);  
 }
-
-
 
 
  //function for fetching search-results from API
 async function fetchArt(query) {
     const searchResult = `https://collectionapi.metmuseum.org/public/collection/v1/search?q=${query}`;
 
-
     try {
         const response = await fetch(searchResult);
         if(!response.ok) {
             throw new Error(`Error: ${response.status}`);
         }
-        const data = await response.json();
-        //call function that shows result in dom
+        const data = await response.json(); 
         console.log(data);
 
         //get IDs from API
@@ -96,12 +89,10 @@ async function fetchArt(query) {
     }
 
 
-
     //get usable objects out of the ID:s
     async function fetchArtObjects(ID) {
 
         const objectSearchResult = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${ID}`;
-
 
         artContainerEl.innerHTML = ""; // empty from before
 
@@ -112,15 +103,13 @@ async function fetchArt(query) {
             }
             const objData = await objResponse.json();
 
-
-
-            //filter out non-public domain objects 
+            //filter out non-public domain objects (they don't have images in API)
            if(objData.isPublicDomain === true) {
         
                 console.log(objData);
                 let buttonID = "addToFavs" + objData.objectID; //Use ID in object to create unique id:s for the button
              
-
+                //render search results
                 const artArticle = document.createElement('article');
                 artArticle.classList.add('art-piece');
 
