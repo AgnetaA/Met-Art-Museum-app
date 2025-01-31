@@ -9,22 +9,21 @@ let deleteBtnClicked = false;
 
 getFavouriteObjects();
 
+
 //Send all objects in favourite-array (localstorage) to be rendered as the page loads
 for (let i = 0; i < favouriteObjects.length; i++) {
-    const favObject = favouriteObjects[i];
-
-    console.log(favObject.title);
-
     renderObjectToDom(favouriteObjects[i]);
 }
+
 
 //submit search-form
 formEl.addEventListener("submit", (event) => {
     event.preventDefault();
-    console.log("inputten: " + inputEl.value);
     const query = inputEl.value;
     fetchArt(query); //call function to get searchResult
+    inputEl.value = "";
 });
+
 
 //Write the HTML for a favourite object
 function renderObjectToDom(favObject) {
@@ -37,8 +36,9 @@ function renderObjectToDom(favObject) {
     favouriteArticle.innerHTML = `
         <img src="${favObject.primaryImageSmall}" alt="Photo of ${favObject.title}"/>
         <a href="${favObject.objectURL}" target="_blank"><h3>${favObject.title}</h3></a>
+        <p>${favObject.artistDisplayName}</p>
 
-        <button type="submit" id="${buttonID}">Ta bort</button>
+        <button type="submit" class="delete-button" id="${buttonID}">Ta bort</button>
     `;
 
     if (deleteBtnClicked === false) {
@@ -58,6 +58,7 @@ function renderObjectToDom(favObject) {
 
 }
 
+
 //render favourites anew after deleting one item
 function reWriteFavourites(favouriteObjects) {
     deleteBtnClicked = false;
@@ -71,35 +72,28 @@ function reWriteFavourites(favouriteObjects) {
     }
 }
 
+
 //get saved favourites
 function getFavouriteObjects() {
     favouriteObjects = JSON.parse(localStorage.getItem('favourite_art') || "[]");
-
-    console.log("favouriteObjects:", favouriteObjects)
 }
 
 
 //Add to favourites and localstorage
 function addToFavouriteList(objData) {
-
-    console.log("objData", objData);
-
     favouriteObjects.push(objData);
 
     localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
-    console.log("favouriteObjects", favouriteObjects);
 
     renderObjectToDom(objData);
 }
 
+
 //delete an object from favourites
 function deleteFromFavouriteList(favObject) {
-
     const index = favouriteObjects.findIndex((fav) => fav.objectID === favObject.objectID);
-    console.log(index);
 
     favouriteObjects.splice(index, 1);
-    console.log(favouriteObjects);
 
     //update DOM
     localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
@@ -118,7 +112,6 @@ async function fetchArt(query) {
             throw new Error(`Error: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
 
         //get IDs from API
         const resultArray = data.objectIDs;
@@ -132,6 +125,7 @@ async function fetchArt(query) {
     } catch (error) {
         console.error(error);
     }
+
 
     //get usable objects out of the ID:s
     async function fetchArtObjects(ID) {
@@ -150,7 +144,6 @@ async function fetchArt(query) {
             //filter out non-public domain objects (they don't have images in API)
             if (objData.isPublicDomain === true) {
 
-                console.log(objData);
                 let buttonID = "addToFavs" + objData.objectID; //Use ID in object to create unique id:s for the button
 
                 //render search results
@@ -160,8 +153,9 @@ async function fetchArt(query) {
                 artArticle.innerHTML = `
                 <img src="${objData.primaryImageSmall}" alt="Photo of ${objData.title}"/>
                 <a href="${objData.objectURL}" target="_blank"><h3>${objData.title}</h3></a>
+                <p>${objData.artistDisplayName}</p>
                 
-                <button type="submit" id="${buttonID}">Lägg till i favoriter</button>
+                <button type="submit" class="item-button" id="${buttonID}">Lägg till i favoriter</button>
                 `;
                 artContainerEl.appendChild(artArticle);
 

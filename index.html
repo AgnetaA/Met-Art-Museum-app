@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API-uppgift</title>
-    
+
     <script src="./script.js" defer></script>
     <link rel="stylesheet" href="./style.css">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
+
 </head>
 
-<body> 
+<body>
 
     <header>
         <h1>Metropolitan Museum of Art</h1>
@@ -21,8 +26,8 @@
 
         <form id="search-form">
             <label for="search-input">Sök konstverk:</label>
-            <input type="text" name="search-input" id="search-input">
-            <button type="submit">Sök</button>
+            <input type="text" name="search-input" id="search-input" required>
+            <button type="submit" class="button" id="search-form-button">Sök</button>
         </form>
 
         <section id="art-container"></section>
@@ -34,7 +39,7 @@
 
 
     </main>
-    
+
 </body>
 
 </html>

@@ -1,19 +1,154 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+  }
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(7, 42, 94);
+}
+
+header h1 {
+    padding: 20px;
+    color: white;
+    font-family: "Marck Script", serif;
+}
 
 
+main {
+    padding: 20px;
+    background-color: #336396;
+    height: 100%;
+}
+
+
+.item-button {
+    background-color: rgb(40, 86, 28);
+    color: white;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    align-self: flex-end;
+    margin-top: auto;
+}
+
+.delete-button {
+    background-color: rgb(89, 19, 46);
+    color: white;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    align-self: flex-end;
+    margin-top: auto;
+}
+
+label {
+    color: white; 
+}
+
+#search-form-button {
+    margin-left: 10px;
+    background-color: rgb(255, 255, 255);
+    padding: 5px 10px 5px 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    align-self: flex-end;
+    margin-top: auto;
+}
+
+#search-input {
+    padding: 5px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
 
 
 
 #art-container, #favourite-container  {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top: 20px;
 }
 
 .art-piece {
     width: 20vw;
-    padding: 1vw;
-
+    padding: 1.2vw;
+    /*border: 2px solid black;*/
+    margin-top: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
 }
 
 .art-piece img {
-    width: 20vw;
+    max-width: 20vw;  
+    max-height: 40vh;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.art-piece p {
+    font-size: 0.8rem;
+    color:grey;
+    margin-bottom: 15px;
+}
+
+
+h2 {
+    color: white;
+    padding: 10px;
+}
+
+h3 {
+    color: rgb(23, 23, 23);
+}
+
+@media screen and (max-width: 800px) {
+    .art-piece {
+        width: 30vw;
+        
+    }
+
+    .art-piece img {
+        max-width: 30vw;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .art-piece {
+        width: 80vw;
+        
+    }
+
+    .art-piece img {
+        max-width: 80vw;
+    }
+}
+
+.favouriteDiv {
+    padding: 1vh 2vh 7vh 2vw;
+    margin-top: 4vh;
+    background-color: rgb(7, 42, 94);
+    border-radius: 10px
 }
