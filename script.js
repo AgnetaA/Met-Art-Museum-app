@@ -9,6 +9,8 @@ let deleteBtnClicked = false;
 
 getFavouriteObjects();
 
+console.log(favouriteObjects);
+
 
 //Send all objects in favourite-array (localstorage) to be rendered as the page loads
 for (let i = 0; i < favouriteObjects.length; i++) {
@@ -39,13 +41,12 @@ function renderObjectToDom(favObject) {
         <a href="${favObject.objectURL}" target="_blank"><h3>${favObject.title}</h3></a>
         <p>${favObject.artistDisplayName}</p>
 
-        <form>
-            <input type="checkbox" class="prioCheckbox" id="${prioID}" name="${prioID}" value="priority">
-            <label for="${prioID}" class="prioLabel">Särskilt intressant</label>
+        <form> 
+            <input type="checkbox" class="prioCheckbox" id="${prioID}" name="${prioID}">
+            <label for="${prioID}" class="prioLabel">Viktig!</label>
 
             <button type="submit" class="delete-button" id="${buttonID}">Ta bort</button>
         </form>
-  
     `;
 
     if (deleteBtnClicked === false) {
@@ -65,26 +66,31 @@ function renderObjectToDom(favObject) {
 
 
     const checkbox = document.getElementById(`${prioID}`)
-    
+
+    if (favObject.priority === true) {
+        checkbox.checked = true;
+        favouriteArticle.classList.add('priority-art');
+    }
+
+
     checkbox.addEventListener("change", (event) => {
         event.preventDefault();
 
-        
-        
-        if(checkbox.checked === true) {
-            console.log(`checked, ${prioID}`);
+        if (checkbox.checked === true) {
             favObject.priority = true;
 
             favouriteArticle.classList.add('priority-art');
+
+            //make checkbox stay checked
+            localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
         }
+
         else {
             favObject.priority = false;
             favouriteArticle.classList.remove('priority-art');
+            localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
         }
-        console.log(favObject);
-
     });
-
 }
 
 
@@ -96,10 +102,9 @@ function reWriteFavourites(favouriteObjects) {
     favouriteItemsEl.innerHTML = "";
 
     for (let i = 0; i < favouriteObjects.length; i++) {
-        favObject = favouriteObjects[i];      
+        favObject = favouriteObjects[i];
         renderObjectToDom(favObject);
     }
-
 }
 
 
@@ -111,24 +116,12 @@ function getFavouriteObjects() {
 
 //Add to favourites and localstorage
 function addToFavouriteList(objData) {
-
-
-
     favouriteObjects.push(objData);
 
-
-    //lägg till priority i alla objekt
-    favouriteObjects.forEach(objData => {
-        objData.priority = false;
-    })
-
-    
-
+    //add priority to new objects
+    objData.priority = false;
 
     localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
-
-
-    console.log(favouriteObjects);
 
     renderObjectToDom(objData);
 }
@@ -137,15 +130,22 @@ function addToFavouriteList(objData) {
 //delete an object from favourites
 function deleteFromFavouriteList(favObject) {
 
-    
-    const index = favouriteObjects.findIndex((fav) => fav.objectID === favObject.objectID);
+    //stop unwanted deletion
+    if (favObject.priority === true) {
+        alert(`
+            Vill du verkligen ta bort detta objekt? 
+            Vänligen bocka ur "Viktig!"
+            :o)`);
+    } else {
+        const index = favouriteObjects.findIndex((fav) => fav.objectID === favObject.objectID);
 
-    favouriteObjects.splice(index, 1);
+        favouriteObjects.splice(index, 1);
 
-    //update DOM
-    localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
+        //update DOM
+        localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
 
-    renderObjectToDom(favObject);
+        renderObjectToDom(favObject);
+    }
 }
 
 
@@ -164,7 +164,7 @@ async function fetchArt(query) {
         const resultArray = data.objectIDs;
 
         //sending result = ID:s to another function, fetch only the 10 first ID:s
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 15; i++) {
             const ID = resultArray[i];
             fetchArtObjects(ID);
         }
