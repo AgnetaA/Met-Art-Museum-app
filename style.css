@@ -52,7 +52,10 @@ main {
     border: 1px solid black;
     border-radius: 5px;
     align-self: flex-end;
-    margin-top: auto;
+    margin-top: 5px;
+    margin-left: 5px;
+    float: right;
+    
 }
 
 label {
@@ -79,9 +82,8 @@ a {
 
 a:hover {
     text-decoration: underline;
+    color: rgb(23, 23, 23);
 }
-
-
 
 #art-container, #favourite-container  {
     display: flex;
@@ -101,6 +103,10 @@ a:hover {
     background-color: white;
 }
 
+.priority-art {
+    background-color: rgb(255, 255, 187);
+}
+
 .art-piece img {
     max-width: 20vw;  
     max-height: 40vh;
@@ -114,6 +120,10 @@ a:hover {
     margin-bottom: 15px;
 }
 
+.art-piece form {
+    margin-top: auto;
+}
+
 
 h2 {
     color: white;
@@ -122,6 +132,11 @@ h2 {
 
 h3 {
     color: rgb(23, 23, 23);
+}
+
+.prioLabel{
+    color: rgb(23, 23, 23);
+    font-size: 0.85rem;
 }
 
 @media screen and (max-width: 800px) {

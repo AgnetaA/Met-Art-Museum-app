@@ -29,6 +29,7 @@ formEl.addEventListener("submit", (event) => {
 function renderObjectToDom(favObject) {
 
     let buttonID = "removeFromFavs" + favObject.objectID;
+    let prioID = "prio" + favObject.objectID;
 
     const favouriteArticle = document.createElement('article');
     favouriteArticle.classList.add('art-piece');
@@ -38,7 +39,13 @@ function renderObjectToDom(favObject) {
         <a href="${favObject.objectURL}" target="_blank"><h3>${favObject.title}</h3></a>
         <p>${favObject.artistDisplayName}</p>
 
-        <button type="submit" class="delete-button" id="${buttonID}">Ta bort</button>
+        <form>
+            <input type="checkbox" class="prioCheckbox" id="${prioID}" name="${prioID}" value="priority">
+            <label for="${prioID}" class="prioLabel">Särskilt intressant</label>
+
+            <button type="submit" class="delete-button" id="${buttonID}">Ta bort</button>
+        </form>
+  
     `;
 
     if (deleteBtnClicked === false) {
@@ -56,6 +63,28 @@ function renderObjectToDom(favObject) {
         reWriteFavourites(favouriteObjects);
     });
 
+
+    const checkbox = document.getElementById(`${prioID}`)
+    
+    checkbox.addEventListener("change", (event) => {
+        event.preventDefault();
+
+        
+        
+        if(checkbox.checked === true) {
+            console.log(`checked, ${prioID}`);
+            favObject.priority = true;
+
+            favouriteArticle.classList.add('priority-art');
+        }
+        else {
+            favObject.priority = false;
+            favouriteArticle.classList.remove('priority-art');
+        }
+        console.log(favObject);
+
+    });
+
 }
 
 
@@ -70,6 +99,7 @@ function reWriteFavourites(favouriteObjects) {
         favObject = favouriteObjects[i];      
         renderObjectToDom(favObject);
     }
+
 }
 
 
@@ -81,9 +111,24 @@ function getFavouriteObjects() {
 
 //Add to favourites and localstorage
 function addToFavouriteList(objData) {
+
+
+
     favouriteObjects.push(objData);
 
+
+    //lägg till priority i alla objekt
+    favouriteObjects.forEach(objData => {
+        objData.priority = false;
+    })
+
+    
+
+
     localStorage.setItem("favourite_art", JSON.stringify(favouriteObjects));
+
+
+    console.log(favouriteObjects);
 
     renderObjectToDom(objData);
 }
@@ -91,6 +136,8 @@ function addToFavouriteList(objData) {
 
 //delete an object from favourites
 function deleteFromFavouriteList(favObject) {
+
+    
     const index = favouriteObjects.findIndex((fav) => fav.objectID === favObject.objectID);
 
     favouriteObjects.splice(index, 1);
